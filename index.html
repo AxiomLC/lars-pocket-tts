@@ -1,0 +1,65 @@
+<!doctype html>
+<!--
+  Test3-Voice-AI · Pocket — page markup only.
+  Styles:        style.css
+  State machine: state.js   (idle / listening / thinking / speaking)
+  App logic:     app.js     (STT, Groq stream, Pocket TTS stream, echo defence)
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test3-Voice-AI · Pocket</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body data-s="idle"><!-- data-s mirrors the state machine; CSS keys off it -->
+
+  <!-- ============ LEFT: conversation + controls ============ -->
+  <section id="left">
+    <h2>Chat</h2>
+    <div id="chat" aria-live="polite"></div>
+
+    <div id="controls">
+      <!-- Mic button + live status line -->
+      <div id="row">
+        <button id="mic" aria-label="Talk" title="Talk / stop">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4M8 22h8"/>
+          </svg>
+        </button>
+        <div class="grow">
+          <div id="status">Idle</div>
+          <div id="interim"></div><!-- live transcript of what the mic hears -->
+        </div>
+      </div>
+
+      <!-- Toggles and utilities -->
+      <div id="buttons">
+        <button id="rearm" class="on" title="After the reply starts playing, re-open the mic (barge-in)">Re-arm: On</button>
+        <button id="kbd">Keyboard</button>
+        <button id="stop" title="Stop speech and mic">Stop</button>
+        <button id="echo" title="Plays a line and logs anything the mic hears while it plays">Echo test</button>
+        <button id="clear">Clear chat</button>
+      </div>
+
+      <!-- Optional typed input (toggled by the Keyboard button) -->
+      <div id="typed">
+        <input id="txt" placeholder="Type a message" autocomplete="off">
+        <button id="send">Send</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RIGHT: specs + log ============ -->
+  <section id="right">
+    <h2>Specs &amp; log <span class="hint">(also in DevTools console)</span></h2>
+    <div id="specs">loading…</div>
+    <div id="log"></div>
+  </section>
+
+  <!-- Order matters: state machine first, then the app that uses it -->
+  <script src="state.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
